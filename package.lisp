@@ -9,4 +9,5 @@
 ;;;; ***********************************************************************
 
 (defpackage #:net.bardcode.literals
-  (:use #:cl #:net.bardcode.dict))
+  (:use #:cl #:net.bardcode.dict)
+  (:export #:^ #:$))
