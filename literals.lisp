@@ -3,18 +3,6 @@
 (in-package #:net.bardcode.literals)
 
 
-;;; functions
-;;; ---------------------------------------------------------------------
-;;; enables us to write lambdas like (^ (x)(* x x))
-;;; and funcalls like ($ fn arg1 arg2 arg3)
-
-(defmacro ^ (args &body body)
-  `(lambda ,args ,@body))
-
-(defmacro $ (fn &rest args)
-  `(funcall ,fn ,@args))
-
-
 ;;; lists
 ;;; ---------------------------------------------------------------------
 ;;; enables us to write literal lists like [1 2 3 [4 5] 6]
