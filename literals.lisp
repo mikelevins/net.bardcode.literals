@@ -40,7 +40,7 @@
 
 (defmethod print-object ((object hash-table) stream)
   (if (= (hash-table-count object) 0)
-      (format stream "hashtable {}")
+      (format stream "{}")
       (let ((data (loop for k being the hash-keys of object
                         collect k
                         collect (gethash k object))))
