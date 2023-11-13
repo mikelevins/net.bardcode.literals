@@ -17,8 +17,8 @@
 
 ;;; hash-tables
 ;;; ---------------------------------------------------------------------
-;;; enables us to write literal hash-tables like {:a 1 :b 2 :c {:d 4 :e 5}}
-;;; hash-tables created this way always use 'equal to test keys
+;;; enables us to write literal hash-tables like #H:eql{:a 1 :b 2 :c {:d 4 :e 5}}
+;;; or, if the testname is EQUALP, {:a 1 :b 2 :c {:d 4 :e 5}}
 
 (set-syntax-from-char #\{ #\()
 (set-syntax-from-char #\} #\))
@@ -38,16 +38,35 @@
                :collect `(setf (gethash ,tmp ,h) ,e))
        ,h)))
 
-(defmethod print-object ((object hash-table) stream)
-  (if (= (hash-table-count object) 0)
-      (format stream "{}")
-      (let ((data (loop for k being the hash-keys of object
-                        collect k
-                        collect (gethash k object))))
-        (format stream "{~{~s~^ ~}}" data))))
+(defun hash-reader (stream char n)
+  (declare (ignore char n))
+  (let* ((args (read stream t nil t)))
+    (cons 'quote args)))
 
 (set-macro-character #\{
                      (lambda (stream char)
                        (declare (ignore char))
                        (let ((elts (read-delimited-list #\} stream t)))
-                         `(hash (:test 'equal) ,@elts))))
+                         `(hash (:test 'equalp) ,@elts))))
+
+;;; print-object
+
+(defmethod print-object ((object hash-table) stream)
+  (let ((testname (hash-table-test object)))
+    (if (equalp (symbol-name testname) "EQUALP")
+        (if (= (hash-table-count object) 0)
+            (format stream "{}" testname)
+            (let ((data (loop for k being the hash-keys of object
+                           collect k
+                           collect (gethash k object))))
+              (format stream "{~{~s~^ ~}}" data)))
+        (print-unreadable-object (object stream :type t)
+          (format stream "<~S>" testname)
+          (if (= (hash-table-count object) 0)
+              (format stream "{}" testname)
+              (let ((data (loop for k being the hash-keys of object
+                             collect k
+                             collect (gethash k object))))
+                (format stream "{~{~s~^ ~}}" data)))))))
+
+
