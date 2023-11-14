@@ -17,8 +17,7 @@
 
 ;;; hash-tables
 ;;; ---------------------------------------------------------------------
-;;; enables us to write literal hash-tables like #H:eql{:a 1 :b 2 :c {:d 4 :e 5}}
-;;; or, if the testname is EQUALP, {:a 1 :b 2 :c {:d 4 :e 5}}
+;;; enables us to write literal EQUALP hash-tables like {:a 1 :b 2 :c {:d 4 :e 5}}
 
 (set-syntax-from-char #\{ #\()
 (set-syntax-from-char #\} #\))
