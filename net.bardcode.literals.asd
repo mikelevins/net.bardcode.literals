@@ -11,8 +11,8 @@
 (asdf:defsystem #:net.bardcode.literals
   :description "Describe net.bardcode.literals here"
   :author "Your Name <your.name@example.com>"
-  :license  "Specify license here"
-  :version "0.0.1"
+  :license "Apache 2.0"
+  :version (:read-file-form "version.lisp")
   :serial t
   :depends-on (:net.bardcode.dict)
   :components ((:file "package")
